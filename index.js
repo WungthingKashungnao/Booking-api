@@ -11,6 +11,7 @@ import usersRoute from "./routes/users.js";
 
 const app = express();
 dotenv.config(); //configuring dotenv so we can access variables from .env file
+app.use(express.json()); //middleware to send json object to express server
 
 //routes start
 app.get("/", (req, res) => {
