@@ -3,18 +3,24 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 // local file import start
 import connect from "./db/db.js";
+import authRoute from "./routes/auth.js";
+import hotelRoute from "./routes/hotels.js";
+import roomRoute from "./routes/rooms.js";
+import usersRoute from "./routes/users.js";
 // local file import end
 
 const app = express();
 dotenv.config(); //configuring dotenv so we can access variables from .env file
 
-// this code run when we disconnect or connect again with the db after the initial connection
-mongoose.connection.on("disconnected", () => {
-  console.log("mongoDb disconnected");
+//routes start
+app.get("/", (req, res) => {
+  res.send("This is home!");
 });
-mongoose.connection.on("connected", () => {
-  console.log("mongoDb connected");
-});
+app.use("/api/auth", authRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/hotels", hotelRoute);
+app.use("/api/rooms", roomRoute);
+// routes end
 
 app.listen(3000, () => {
   connect();
