@@ -23,6 +23,19 @@ app.use("/api/hotels", hotelRoute);
 app.use("/api/rooms", roomRoute);
 // routes end
 
+// middleware for error handling start
+app.use((err, req, res, next) => {
+  const errorStatus = err.status || 500;
+  const errorMessage = err.message || "Something went wrong with api!";
+  return res.status(errorStatus).json({
+    success: false,
+    status: errorStatus,
+    message: errorMessage,
+    stack: err.stack, //this will give more information about the error
+  });
+});
+// middlewrae for error handling end
+
 app.listen(3000, () => {
   connect();
   console.log("server has started on port 3000");
