@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import cookieParser from "cookie-parser"; //for parsing token into cookie used in controller files for authentication
+
 // local file import start
 import connect from "./db/db.js";
 import authRoute from "./routes/auth.js";
@@ -12,6 +13,7 @@ import usersRoute from "./routes/users.js";
 const app = express();
 dotenv.config(); //configuring dotenv so we can access variables from .env file
 app.use(express.json()); //middleware to send json object to express server
+app.use(cookieParser());
 
 //routes start
 app.get("/", (req, res) => {

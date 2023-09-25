@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs"; //package to hash password
+import jwt from "jsonwebtoken";
 
 import userModel from "../models/userModel.js";
 import { createError } from "../utils/error.js";
@@ -41,10 +42,28 @@ export const login = async (req, res, next) => {
       return next(createError(400, "Wrong password or username!"));
     }
 
+    // creating token using jsonwebtoken
+    // openssl rand -base64 32 => use this to create a secret key
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET
+    );
+    /*structure of jwt=> jwt.sign({user info}, secret key)*/
+
     const { password, isAdmin, ...otherDetails } = user._doc; //destrcuting only the needeed infromation to prevent sending password and isAdmin
-    res.status(200).json({
-      message: "sucessfully logged in!",
-      ...otherDetails,
-    });
+
+    //setting token into cookies and sedning data
+    /* structure=>.cookie('name', token, {configuration}) 
+    importaint**
+    { httpOnly: true } =>we are doing this so no client secret reach th cookie
+    **importaint
+    */
+    res
+      .cookie("access_token", token, { httpOnly: true })
+      .status(200)
+      .json({
+        message: "sucessfully logged in!",
+        ...otherDetails,
+      });
   } catch (error) {}
 };
