@@ -65,5 +65,7 @@ export const login = async (req, res, next) => {
         message: "sucessfully logged in!",
         ...otherDetails,
       });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
