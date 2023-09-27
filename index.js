@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser"; //for parsing token into cookie used in controller files for authentication
+import cors from "cors"; //for passing url from backend to frontend
 
 // local file import start
 import connect from "./db/db.js";
@@ -14,6 +15,7 @@ const app = express();
 dotenv.config(); //configuring dotenv so we can access variables from .env file
 app.use(express.json()); //middleware to send json object to express server
 app.use(cookieParser());
+app.use(cors()); //for passing url from backend to frontend
 
 //routes start
 app.get("/", (req, res) => {
