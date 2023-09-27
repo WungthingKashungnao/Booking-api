@@ -43,9 +43,21 @@ export const getHotel = async (req, res, next) => {
 };
 
 export const getAllHotels = async (req, res, next) => {
+  const { min, max, ...others } = req.query; //destructuring query from the url
+  let limiting = parseInt(req.query.limit); //for setting limits based on query input from user
+
   try {
-    const hotels = await hotelModel.find();
-    res.status(200).json(hotels);
+    const hotels = await hotelModel
+      .find({
+        ...others,
+        //for filtering hotels based on min price and max price
+        cheapestPrice: { $gte: min || 1, $lte: max || 99999999999 },
+      })
+      .limit(limiting);
+    res.status(200).json({
+      hotelCount: hotels.length,
+      hotels: hotels,
+    });
   } catch (err) {
     next(err); //execute middleware for error handling which is written inside index.js file
   }
