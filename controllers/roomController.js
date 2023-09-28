@@ -34,6 +34,23 @@ export const updateRoom = async (req, res, next) => {
   }
 };
 
+export const updateRoomAvailability = async (req, res, next) => {
+  try {
+    const roomInfo = await roomModel.updateOne(
+      { "roomNumbers._id": req.params.id },
+      {
+        $push: {
+          "roomNumbers.$.unavailableDates": req.body.dates,
+        },
+      }
+    );
+
+    res.status(200).json({ message: "Room has been updated", room: roomInfo });
+  } catch (err) {
+    next(err); //execute middleware for error handling which is written inside index.js file
+  }
+};
+
 export const deleteRoom = async (req, res, next) => {
   const hotleId = req.params.hotleId;
   try {
